@@ -38,8 +38,22 @@
             <!-- Right Side Of Navbar -->
             <ul class="nav navbar-nav navbar-right">
                 <!-- Authentication Links -->
-                <li><a href="#">Login <i class="fa fa-sign-in"></i></a></li>
-                <li><a href="#">Register</a></li>
+                <template v-if="!currentUser">
+                    <li>
+                        <router-link to="/login">Login</router-link>
+                    </li>
+                    <li>
+                        <router-link to="/register">Register</router-link>
+                    </li>
+                </template>
+                <template v-else>
+                    <li>
+                        <router-link to="/customers">Customers</router-link>
+                    </li>
+                    <li>
+                        <a href="#" @click.prevent="logout">Logout</a>
+                    </li>
+                </template>
             </ul>
         </div>
     </div>
@@ -48,6 +62,17 @@
 
 <script>
     export default {
-        name: 'app-header'
+        name: 'app-header',
+        methods: {
+            logout() {
+                this.$store.commit('logout');
+                this.$router.push('/login');
+            }
+        },
+        computed: {
+            currentUser() {
+                return this.$store.getters.currentUser;
+            }
+        }
     }
 </script>
