@@ -24,7 +24,7 @@ export default {
       return state.auth_error;
     },
     customers(state) {
-      return state.auth_error;
+      return state.customers;
     },
   },
   mutations: {
@@ -48,11 +48,24 @@ export default {
       localStorage.removeItem("user");
       state.isLoggedIn = false;
       state.currentUser = null;
+    },
+    updateCustomers(state, payload) {
+      state.customers = payload;
     }
   },
   actions: {
     login(context) {
       context.commit("login");
+    },
+    getCustomers(context) {
+      axios.get('/api/customers', {
+        headers: {
+          "Authorization": `Bearer ${context.state.currentUser.token}`
+        }
+      })
+      .then((response) => {
+        context.commit('updateCustomers', response.data.customers);
+      })
     }
   }
 };
